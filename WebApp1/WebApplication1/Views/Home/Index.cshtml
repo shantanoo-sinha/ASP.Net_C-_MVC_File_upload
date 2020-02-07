@@ -1,0 +1,125 @@
+﻿@using WebApplication1.Models
+@model WebApplication1.Models.FirmAssetClassMapModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>File Upload Application</title>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container" style="margin-top: 27px;">
+        <div class="card">
+            <div class="card-header" style=" height: 3rem;">
+                <h6>
+                    <b>
+                        Firm - Asset Class Mapping
+                    </b>
+                </h6>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="row mb-3">
+                            <!--<div class="col-md-3" style="text-align:right">
+                                <label for="firmsFile" class="font-weight-bold">Firm Info File:</label>
+                            </div>
+                            <div class="col-md-2" style="text-align:left">
+                                <input type="file" id="firmsFile" name="firmsFile" />
+                            </div>-->
+                            <div class="col-md-1"></div>
+                            <div class="custom-file col-md-4">
+                                <input id="firmsFile" name="firmsFile" type="file" class="custom-file-input">
+                                <label for="firmsFile" class="custom-file-label text-truncate">Upload Firm Info file...</label>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="custom-file col-md-4">
+                                <input id="assetClassFile" name="assetClassFile" type="file" class="custom-file-input">
+                                <label for="assetClassFile" class="custom-file-label text-truncate">Upload Asset Class Mapping file...</label>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <!--
+                            <div class="col-md-4" style="text-align:right">
+                                <label for="assetClassFile" class="font-weight-bold">Asset Class - Firm Map File:</label>
+                            </div>
+                            <div class="col-md-3" style="text-align:left">
+                                <input type="file" id="assetClassFile" name="assetClassFile" />
+                            </div>-->
+                        </div>
+                        <div class="row mb-3 ">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6 text-center">
+                                <input class="btn btn-info font-weight-bold" type="submit" value="Upload FIles" />
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="row mb-3">
+                @if (Model != null && Model.map.Count > 0)
+                {
+                    <hr />
+                    <!--<table cellpadding="0" cellspacing="0">-->
+                    <table class="table table-fixed table-hover table-bordered">
+                        <thead style="background-color:#f2f2f2">
+                            <tr>
+                                <!--<th>Firm Id</th>-->
+                                <th>Firm Name</th>
+                                @foreach (var assetClass in Model.assetClasses.OrderBy(i => i.Value))
+                                {
+                                    <!--<th>@assetClass.Key</th>-->
+                                    <th>@assetClass.Value</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var firm in Model.map.OrderBy(i => i.Value.FirmName).Select((x, i) => new { Value = x, Index = i }))
+                            {
+                                <tr>
+                                    <!--<td>@firm.Value.Key</td>-->
+                                    <th style="background-color:#f2f2f2">@firm.Value.Value.FirmName</th>
+                                    @foreach (var assetClass in Model.assetClasses)
+                                    {
+                                        <td>
+                                            @foreach (var firmAssetClass in @firm.Value.Value.AssetClassModel.Select((x, i) => new { Value = x, Index = i }))
+                                            {
+
+                                                if (firm.Value.Value.AssetClassModel[firmAssetClass.Index].AssetClassId.Equals(assetClass.Key))
+                                                {
+                                                    <p>X</p>
+                                                    <!--@firm.Value.Value.AssetClassModel[firmAssetClass.Index].AssetClassId-->
+                                                    <!--@firm.Value.Value.AssetClassModel[firmAssetClass.Index].AssetClassName-->
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script>
+        jQuery('#firmsFile').on('change', function () {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+        jQuery('#assetClassFile').on('change', function () {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+    </script>
+</body>
+</html>
