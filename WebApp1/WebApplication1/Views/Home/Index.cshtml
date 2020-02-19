@@ -86,7 +86,7 @@
                                 <tr>
                                     <!--<td>@firm.Value.Key</td>-->
                                     <th style="background-color:#f2f2f2">@firm.Value.Value.FirmName</th>
-                                    @foreach (var assetClass in Model.assetClasses)
+                                    @foreach (var assetClass in Model.assetClasses.OrderBy(i => i.Value))
                                     {
                                         <td>
                                             @foreach (var firmAssetClass in @firm.Value.Value.AssetClassModel.Select((x, i) => new { Value = x, Index = i }))
